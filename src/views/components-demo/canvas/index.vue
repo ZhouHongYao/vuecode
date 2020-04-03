@@ -36,10 +36,6 @@ export default {
     this.cvs = document.getElementById("cvs");
     this.cvsClientRect = this.cvs.getBoundingClientRect();
     this.ctx = this.cvs.getContext('2d');
-    if (this.isAdd) {
-      this.cvs.addEventListener("click", this.mousemoveHandler, false);
-    }
-
     this.cvs.addEventListener("mousedown", (event) => {
       if (!this.isAdd) {
         return
@@ -62,7 +58,7 @@ export default {
         this.arrs.push(this.points)
         this.points = []
         this.isAdd = false
-        this.ctx.save();
+        this.cvs.addEventListener("click", this.mouseclickHandler, false);
       }
     }, false);
 
@@ -77,38 +73,79 @@ export default {
     del(row) {
       console.log(row)
     },
-    mousemoveHandler(event) {
+    //点击监听
+    mouseclickHandler(event) {
+      if (this.isAdd) {
+        return
+      }
       let item = {
         x: event.pageX - this.cvsClientRect.x,
         y: event.pageY - this.cvsClientRect.y
       }
-      console.log(this.ctx.isPointInPath(item.x, item.y));
-      // if (this.ctx.isPointInPath(item.x, item.y)) {
-
-      // }
+      console.log(item)
+      this.arrs.forEach(v => {
+        let i = this.judge(item, v)
+        console.log(i, v)
+      });
     },
+    //绘制多边形
     drawPolygon(points) {
       if (!points[0].x) {
         return
       }
-      let poly = this.cvs.getContext('2d');
-      poly.strokeStyle = 'rgba(64, 158, 255,0.5)';
-      // poly.fillStyle = "#409EFF";
-      poly.beginPath();
-      poly.moveTo(points[0].x, points[0].y);
-      for (var i = 1; i < points.length; i++) {
-        poly.lineTo(points[i].x, points[i].y);
-      }
-      poly.closePath();
-      poly.fill();
-      poly.stroke();
-    },
-    drawAcr(item) {
-      this.ctx.beginPath();
-      this.ctx.arc(item.x, item.y, 2, 0, 2 * Math.PI);
+      this.ctx.strokeStyle = 'rgba(64, 158, 255,0.5)';
       this.ctx.fillStyle = "#409EFF";
+      this.ctx.beginPath();
+      this.ctx.moveTo(points[0].x, points[0].y);
+      for (var i = 1; i < points.length; i++) {
+        this.ctx.lineTo(points[i].x, points[i].y);
+      }
+      this.ctx.closePath();
       this.ctx.fill();
       this.ctx.stroke();
+      this.ctx.save();
+    },
+    //画点
+    drawAcr(item) {
+      let acr = this.cvs.getContext('2d');
+      acr.beginPath();
+      acr.arc(item.x, item.y, 2, 0, 2 * Math.PI);
+      acr.strokeStyle = 'rgba(64, 158, 255,0.5)';
+      acr.fillStyle = "#409EFF";
+      acr.fill();
+      acr.stroke();
+    },
+    judge(dot, coordinates) {
+      const x = dot.x;
+      const y = dot.y;
+      var crossNum = 0;
+      for (var i = 0; i < coordinates.length - 1; i++) {
+        var start = coordinates[i];
+        var end = coordinates[i + 1];
+
+        // 起点、终点斜率不存在的情况
+        if (start.x === end.x) {
+          // 因为射线向右水平，此处说明不相交
+          if (x > start.x) continue;
+
+          if ((end.y > start.y && y >= start.y && y <= end.y) || (end.y < start.y && y >= end.y && y <= start.y)) {
+            crossNum++;
+          }
+          continue;
+        }
+        // 斜率存在的情况，计算斜率
+        var k = (end.y - start.y) / (end.x - start.x);
+        // 交点的x坐标
+        var x0 = (y - start.y) / k + start.x;
+        // 因为射线向右水平，此处说明不相交
+        if (x > x0) continue;
+
+        if ((end.x > start.x && x0 >= start.x && x0 <= end.x) || (end.x < start.x && x0 >= end.x && x0 <= start.x)) {
+          crossNum++;
+        }
+      }
+
+      return crossNum % 2 === 1;
     }
   }
 }
