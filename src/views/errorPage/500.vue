@@ -1,0 +1,235 @@
+<template>
+  <div style="background:#f0f2f5;margin-top: -20px;height:100%;">
+    <div class="wscn-http500">
+      <div class="pic-500">
+        <img :src="img_500" class="pic-500__parent" alt="500">
+      </div>
+      <div class="bullshit">
+        <div class="bullshit__oops">Oops!</div>
+        <div class="bullshit__info margin-top-40">技术支持
+          <a class="link-type" href="http://www.ez-tech.cn/" target="_blank">上海屹瑞信息科技有限公司</a>
+        </div>
+        <div class="bullshit__headline">{{ message }}</div>
+        <div class="bullshit__info margin-top-30">服务器出错了，请点击以下按钮返回！</div>
+        <a href="/" class="bullshit__return-home" @click="goback">返回上一页</a>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import img_500 from "@/assets/500_images/500.png";
+
+export default {
+  name: "page500",
+  data() {
+    return {
+      img_500
+    };
+  },
+  computed: {
+    message() {
+      return "500 page error";
+    }
+  },
+  methods: {
+    goback() {
+      if (this.$route.query.noGoBack) {
+        this.$router.push({ name: "dashboard" });
+      } else {
+        this.$router.go(-1);
+      }
+    }
+  }
+};
+</script>
+
+<style rel="stylesheet/scss" lang="scss" scoped>
+.wscn-http500 {
+  position: relative;
+  width: 1200px;
+  margin: 20px auto 60px;
+  padding: 0 100px;
+  overflow: hidden;
+  .pic-500 {
+    position: relative;
+    float: left;
+    width: 600px;
+    padding: 190px 0;
+    overflow: hidden;
+    &__parent {
+      width: 100%;
+    }
+    &__child {
+      position: absolute;
+      &.left {
+        width: 80px;
+        top: 17px;
+        left: 220px;
+        opacity: 0;
+        animation-name: cloudLeft;
+        animation-duration: 2s;
+        animation-timing-function: linear;
+        animation-fill-mode: forwards;
+        animation-delay: 1s;
+      }
+      &.mid {
+        width: 46px;
+        top: 10px;
+        left: 420px;
+        opacity: 0;
+        animation-name: cloudMid;
+        animation-duration: 2s;
+        animation-timing-function: linear;
+        animation-fill-mode: forwards;
+        animation-delay: 1.2s;
+      }
+      &.right {
+        width: 62px;
+        top: 100px;
+        left: 500px;
+        opacity: 0;
+        animation-name: cloudRight;
+        animation-duration: 2s;
+        animation-timing-function: linear;
+        animation-fill-mode: forwards;
+        animation-delay: 1s;
+      }
+      @keyframes cloudLeft {
+        0% {
+          top: 17px;
+          left: 220px;
+          opacity: 0;
+        }
+        20% {
+          top: 33px;
+          left: 188px;
+          opacity: 1;
+        }
+        80% {
+          top: 81px;
+          left: 92px;
+          opacity: 1;
+        }
+        100% {
+          top: 97px;
+          left: 60px;
+          opacity: 0;
+        }
+      }
+      @keyframes cloudMid {
+        0% {
+          top: 10px;
+          left: 420px;
+          opacity: 0;
+        }
+        20% {
+          top: 40px;
+          left: 360px;
+          opacity: 1;
+        }
+        70% {
+          top: 130px;
+          left: 180px;
+          opacity: 1;
+        }
+        100% {
+          top: 160px;
+          left: 120px;
+          opacity: 0;
+        }
+      }
+      @keyframes cloudRight {
+        0% {
+          top: 100px;
+          left: 500px;
+          opacity: 0;
+        }
+        20% {
+          top: 120px;
+          left: 460px;
+          opacity: 1;
+        }
+        80% {
+          top: 180px;
+          left: 340px;
+          opacity: 1;
+        }
+        100% {
+          top: 200px;
+          left: 300px;
+          opacity: 0;
+        }
+      }
+    }
+  }
+  .bullshit {
+    position: relative;
+    float: left;
+    width: 320px;
+    padding: 190px 0;
+    overflow: hidden;
+    &__oops {
+      font-size: 60px;
+      font-weight: 700;
+      line-height: 40px;
+      color: #1482f0;
+      opacity: 0;
+      margin-bottom: 20px;
+      animation-name: slideUp;
+      animation-duration: 0.5s;
+      animation-fill-mode: forwards;
+    }
+    &__headline {
+      font-size: 20px;
+      line-height: 24px;
+      color: #1482f0;
+      opacity: 0;
+      margin-bottom: 10px;
+      animation-name: slideUp;
+      animation-duration: 0.5s;
+      animation-delay: 0.1s;
+      animation-fill-mode: forwards;
+    }
+    &__info {
+      font-size: 13px;
+      line-height: 21px;
+      color: grey;
+      opacity: 0;
+      margin-bottom: 30px;
+      animation-name: slideUp;
+      animation-duration: 0.5s;
+      animation-delay: 0.2s;
+      animation-fill-mode: forwards;
+    }
+    &__return-home {
+      display: block;
+      float: left;
+      width: 110px;
+      height: 36px;
+      background: #1482f0;
+      border-radius: 100px;
+      text-align: center;
+      color: #ffffff;
+      opacity: 0;
+      font-size: 14px;
+      line-height: 36px;
+      cursor: pointer;
+      animation-name: slideUp;
+      animation-duration: 0.5s;
+      animation-delay: 0.3s;
+      animation-fill-mode: forwards;
+    }
+    @keyframes slideUp {
+      0% {
+        transform: translateY(60px);
+        opacity: 0;
+      }
+      100% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+  }
+}
+</style>
